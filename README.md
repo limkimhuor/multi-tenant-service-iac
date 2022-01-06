@@ -15,7 +15,7 @@
 
 ### Cloud Platform
 
-- [x] [AWS](../sun-infra-iac/aws/README.md)
+- [x] AWS
 - [ ] Azure
 - [ ] GCP
 
@@ -39,13 +39,11 @@
 
 ## IaC Tools
 
-- [**Terraform**](../sun-infra-iac/aws/terraform/README.md)
+- [**Terraform**](https://github.com/framgia/sun-infra-iac/blob/master/terraform.md)
 
-## Master branch
+## How to do
 
-Before **add/change/deprecate/remove/fix** to this branch, please do these steps first
-
-1. Install dependencies
+1. (Optional) Install dependencies
 
 <details><summary><b>Ubuntu 18.04</b></summary><br>
 
@@ -73,13 +71,34 @@ curl -L "$(curl -s https://api.github.com/repos/terraform-linters/tflint/release
 
 </details>
 
-2. Excuting pre-commit
+2. (Optional) Setup pre-commit
 
 ```bash
 make pre-commit
 ```
 
-3. Check out new feature like this `feature/iac-aws-terraform`
+3. Choose Cloud Provider you're using for project and follow the instructions
+
+- [AWS](https://github.com/framgia/sun-infra-iac/blob/master/examples/aws/README.md)
+
+4. Choose IaC tools you need to use, clone IaC folder to repo of your project and follow the instructions
+
+<pre>
+├── aws
+│   └── <a href="https://github.com/framgia/sun-infra-iac/blob/master/examples/aws/terraform/environments/README.md">terraform</a>
+</pre>
+
+## Contributor
+
+- Do step 1 & 2 in **How to do**
+
+If you want to add, update any **IaC tools** to this repo please:
+
+- Before **_add/change/deprecate/remove/fix_** to this branch, please check out new feature like this `feature/iac-<cloud-provider>-<iac-tools>`, example `feature/iac-aws-terraform` and create PR
+
+If you want to add, update any **terraform modules** to this repo please:
+
+- Create new feature like this `terraform-aws-<terraform-module>`
 
 ## Release
 
