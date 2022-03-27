@@ -100,6 +100,17 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
   enter Environment: prod
   ```
 
+### Create a new service
+
+- Create service folder in environment you want. Ex: **admin**, **general**...
+- Excute `make symlink` to symlink variables.tf file from environment folder to each service folder and add this symlink file to gitignore
+
+- Enter your environment and service you want. Example:
+
+  ```bash
+  enter Environment & Service: prod admin
+  ```
+
 ## Examples
 
 ### Structure

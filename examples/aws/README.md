@@ -18,33 +18,70 @@ Refer how to install [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/
 
 #### 2.1 AWS-profile on LocalStation
 
-- Need to [create AMI User (Access & Secret Key)](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) with Right Permission
+- Need to [create AMI User (Access & Secret Key)](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) with Right Permission and enable MFA
 - Terraform/AWS-CLI will use this IAM User to create AWS infrastructure and excute any command line for using AWS
 
-- Create AWS profile
+- Config AWS profile:
+  - with force MFA for AWS CLI
+    - Create AWS profile
 
-  ```bash
-    aws configure --profile {{ project }}-{{ env }}
-        AWS Access Key ID:
-        AWS Secret Access Key:
-        Default region name: ap-northeast-1
-        Default output format: json
-  ```
+      ```bash
+        aws configure --profile {{ project }}-default
+            AWS Access Key ID: <your-access-key>
+            AWS Secret Access Key: <your-secret-access-key>
+            Default region name: ap-northeast-1
+            Default output format: json
+      ```
 
-- Check ~/.aws/credentials
+    - Add this to `~/.aws/credentials`
 
-  ```bash
-  [{{ project }}-{{ env }}]
-  aws_access_key_id =
-  aws_secret_access_key =
-  ```
+      ```bash
+      [{{ project }}-{{ env }}]
+      aws_access_key_id =
+      aws_secret_access_key =
+      aws_session_token =
+      ```
 
-- Set ~/.aws/config
+    - Add this to `~/.aws/config`
 
-  ```bash
-  [profile {{ project }}-{{ env }}]
-  region = ap-northeast-1
-  ```
+      ```bash
+      [profile {{ project }}-{{ env }}]
+      output = json
+      region = ap-northeast-1
+      ```
+
+    - Excuting `create-aws-sts.sh`
+
+      ```
+      ./aws/create-aws-sts.sh {{ project }}-default {{ project }}-{{ env }} {{ account_id }} {{ iam_user_name }} {{ token_code }}
+      ```
+
+  - without force MFA for AWS CLI
+    - Create AWS profile
+
+      ```bash
+        aws configure --profile {{ project }}-{{ env }}
+            AWS Access Key ID: <your-access-key>
+            AWS Secret Access Key: <your-secret-access-key>
+            Default region name: ap-northeast-1
+            Default output format: json
+      ```
+
+    - Check ~/.aws/credentials
+
+      ```bash
+      [{{ project }}-{{ env }}]
+      aws_access_key_id =
+      aws_secret_access_key =
+      ```
+
+    - Set ~/.aws/config
+
+      ```bash
+      [profile {{ project }}-{{ env }}]
+      output = json
+      region = ap-northeast-1
+      ```
 
 #### 2.2 (Optional for Terraform) Create manually AWS S3 bucket, Dynamodb to store/lock IaC state and KMS Key to encrypt it
 
@@ -84,7 +121,7 @@ Refer how to install [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/
   KMS_KEY_ARN=$(aws kms describe-key --key-id $KMS_KEY_ID --query "KeyMetadata.Arn" --output text --profile {{ project }}-{{ env }} --region ap-northeast-1) | echo "Terraform KMS Key ARN: \n $KMS_KEY_ARN"
   ```
 
-#### 2.3 (Optional) Create key pairs for project using EC2 or Bastion
+#### 2.3 (Optional) Create key pairs for project using EC2
 
 - Create [EC2 key pairs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair)
 
@@ -94,7 +131,7 @@ Refer how to install [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/
       --key-type rsa \
       --query "KeyMaterial" \
       --profile {{ project }}-{{ env }} \
-      --output text > {{ project }}-keypair-{{ env }}.pem
+      --output text > ~/.ssh/{{ project }}-keypair-{{ env }}.pem
   ```
 
 ## Workflow diagram of some samples

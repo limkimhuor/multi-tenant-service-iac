@@ -97,3 +97,4 @@ override.tf.json
 # example: *tfplan*
 
 *.pem
+*keypair*
