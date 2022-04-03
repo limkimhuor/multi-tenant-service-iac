@@ -116,32 +116,53 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
 ### Structure
 
 ```
-└── terraform
-    └── environments
-        ├── prod
-        │   ├── admin
-        |   │   ├── backend.tf
-        │   │   ├── main.tf
-        │   │   ├── outputs.tf
-        │   │   └── variables.tf
-        │   ├── general
-        │   │   ├── backend.tf
-        │   │   ├── main.tf
-        │   │   ├── outputs.tf
-        │   │   └── variables.tf
-        │   └── terraform.tfvars
-        └── stg
-            ├── admin
-            │   ├── backend.tf
-            │   ├── main.tf
-            │   ├── outputs.tf
-            │   └── variables.tf
-            ├── general
-            │   ├── backend.tf
-            │   ├── main.tf
-            │   ├── outputs.tf
-            │   └── variables.tf
-            └── terraform.tfvars
+├── environments
+│   ├── prod
+│   │   ├── 1.general
+│   │   │   ├── 1.1.iam.tf
+│   │   │   ├── backend.tf
+│   │   │   ├── outputs.tf
+│   │   │   ├── README.md
+│   │   │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/prod/variables.tf
+│   │   ├── 2.admin
+│   │   │   ├── 2.1.iam.tf
+│   │   │   ├── backend.tf
+│   │   │   ├── outputs.tf
+│   │   │   ├── README.md
+│   │   │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/prod/variables.tf
+│   │   ├── terraform.prod.tfvars
+│   │   └── variables.tf
+│   └── stg
+│       ├── 1.general
+│       │   ├── 1.1.iam.tf
+│       │   ├── backend.tf
+│       │   ├── outputs.tf
+│       │   ├── README.md
+│       │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/stg/variables.tf
+│       ├── 2.admin
+│       │   ├── 2.1.iam.tf
+│       │   ├── backend.tf
+│       │   ├── outputs.tf
+│       │   ├── README.md
+│       │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/stg/variables.tf
+│       ├── terraform.stg.tfvars
+│       └── variables.tf
+├── README.md
+└── templates
+    ├── codebuild
+    │   └── buildspec.yml
+    ├── codedeploy
+    │   ├── appspec.yml
+    │   └── hooks
+    │       ├── 1.pull-and-config.sh
+    │       ├── 2.build-and-deploy.sh
+    │       ├── 3.start.sh
+    │       └── 4.validate.sh
+    ├── lambda-function
+    │   └── cloudwatch-alarm
+    └── policy
+        ├── assume-role-lambda.json
+        └── lambda-example.json
 ```
 
 ### Environments
@@ -159,7 +180,8 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
 - Create variables for main.tf
   - [x] variables.tf
 - Values of variables for each environment
-  - [x] terraform.tfvars
+  - [x] terraform.stg.tfvars
+  - [x] terraform.prod.tfvars
 
 ### Main
 
@@ -173,7 +195,7 @@ Example:
 
 ```bash
 module "example" {
-  source = "git@github.com:framgia/sun-infra-iac.git//modules/iam-role?ref=terraform-aws-iam_v0.0.1"
+  source = "git@github.com:framgia/sun-infra-iac.git//modules/iam-role?ref=terraform-aws-iam_v0.0.3"
 }
 ```
 

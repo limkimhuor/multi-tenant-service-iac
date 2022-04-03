@@ -12,12 +12,12 @@ terraform {
     template = "~> 2.0"
   }
   backend "s3" {
-    profile        = "project-prod"
-    bucket         = "project-iac-state-prod"
-    key            = "general/terraform.tfstate"
-    region         = "ap-northeast-1"
-    encrypt        = true
-    kms_key_id     = "arn:aws:kms:ap-northeast-1:<account-id>:key/<key-id>"
+    profile = "project-prod"
+    bucket  = "project-iac-state-prod"
+    key     = "general/terraform.tfstate"
+    region  = "ap-northeast-1"
+    /* encrypt        = true
+    kms_key_id     = "arn:aws:kms:ap-northeast-1:<account-id>:key/<key-id>" */
     dynamodb_table = "project-terraform-state-lock-prod"
   }
 }

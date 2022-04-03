@@ -5,14 +5,25 @@
 .PHONY: symlink
 symlink:
 	@read -p "enter Environment & Service: " ENV SERVICE && \
-	ln -sfn $(shell pwd)/terraform/environments/$$ENV/variables.tf $(shell pwd)/terraform/environments/$$ENV/$$SERVICE && \
-	find terraform/environments/$$ENV/$$SERVICE -type l >> .gitignore
+	service_list=$$(ls -d terraform/environments/$$ENV/*/ | cut -d . -f2 | cut -d / -f1) && \
+	for service in $$service_list; do \
+        if [ $$service = $$SERVICE ]; then\
+		service_path=$$(ls -d terraform/environments/$$ENV/*/ | grep $$SERVICE | head -n 1) && echo "symlink variables.tf for $$service_path" && \
+		ln -sfn $(shell pwd)/terraform/environments/$$ENV/variables.tf $(shell pwd)/$$service_path && \
+		find $$service_path -type l >> .gitignore; \
+		fi \
+	done
 
 #Init
 .PHONY: init
 init:
 	@read -p "enter Environment & Service: " ENV SERVICE && \
-	terraform -chdir=terraform/environments/$$ENV/$$SERVICE init
+	service_list=$$(ls -d terraform/environments/$$ENV/*/ | cut -d . -f2 | cut -d / -f1) && \
+	for service in $$service_list; do \
+        if [ $$service = $$SERVICE ]; then\
+		service_path=$$(ls -d terraform/environments/$$ENV/*/ | grep $$SERVICE | head -n 1) && echo $$service_path && terraform -chdir=$$service_path init; \
+		fi \
+	done
 
 .PHONY: init_all
 init_all:
@@ -26,7 +37,12 @@ init_all:
 .PHONY: plan
 plan:
 	@read -p "enter Environment & Service: " ENV SERVICE && \
-	terraform -chdir=terraform/environments/$$ENV/$$SERVICE plan --var-file=../terraform.$$ENV.tfvars
+	service_list=$$(ls -d terraform/environments/$$ENV/*/ | cut -d . -f2 | cut -d / -f1) && \
+	for service in $$service_list; do \
+        if [ $$service = $$SERVICE ]; then\
+		service_path=$$(ls -d terraform/environments/$$ENV/*/ | grep $$SERVICE | head -n 1) && echo $$service_path && terraform -chdir=$$service_path plan --var-file=../terraform.$$ENV.tfvars; \
+		fi \
+	done
 
 .PHONY: plan_all
 plan_all:
@@ -39,7 +55,12 @@ plan_all:
 .PHONY: plan_destroy
 plan_destroy:
 	@read -p "enter Environment & Service: " ENV SERVICE && \
-	terraform -chdir=terraform/environments/$$ENV/$$SERVICE plan --var-file=../terraform.$$ENV.tfvars -destroy
+	service_list=$$(ls -d terraform/environments/$$ENV/*/ | cut -d . -f2 | cut -d / -f1) && \
+	for service in $$service_list; do \
+        if [ $$service = $$SERVICE ]; then\
+		service_path=$$(ls -d terraform/environments/$$ENV/*/ | grep $$SERVICE | head -n 1) && echo $$service_path && terraform -chdir=$$service_path plan --var-file=../terraform.$$ENV.tfvars -destroy; \
+		fi \
+	done
 
 .PHONY: plan_destroy_all
 plan_destroy_all:
@@ -53,7 +74,12 @@ plan_destroy_all:
 .PHONY: apply
 apply:
 	@read -p "enter Environment & Service: " ENV SERVICE && \
-	terraform -chdir=terraform/environments/$$ENV/$$SERVICE apply --var-file=../terraform.$$ENV.tfvars
+	service_list=$$(ls -d terraform/environments/$$ENV/*/ | cut -d . -f2 | cut -d / -f1) && \
+	for service in $$service_list; do \
+        if [ $$service = $$SERVICE ]; then\
+		service_path=$$(ls -d terraform/environments/$$ENV/*/ | grep $$SERVICE | head -n 1) && echo $$service_path && terraform -chdir=$$service_path apply --var-file=../terraform.$$ENV.tfvars; \
+		fi \
+	done
 
 .PHONY: apply_all
 apply_all:
@@ -67,7 +93,12 @@ apply_all:
 .PHONY: destroy
 destroy:
 	@read -p "enter Environment & Service: " ENV SERVICE && \
-	terraform -chdir=terraform/environments/$$ENV/$$SERVICE destroy --var-file=../terraform.$$ENV.tfvars
+	service_list=$$(ls -d terraform/environments/$$ENV/*/ | cut -d . -f2 | cut -d / -f1) && \
+	for service in $$service_list; do \
+        if [ $$service = $$SERVICE ]; then\
+		service_path=$$(ls -d terraform/environments/$$ENV/*/ | grep $$SERVICE | head -n 1) && echo $$service_path && terraform -chdir=$$service_path destroy --var-file=../terraform.$$ENV.tfvars; \
+		fi \
+	done
 
 .PHONY: destroy_all
 destroy_all:
