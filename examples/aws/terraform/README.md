@@ -1,6 +1,6 @@
 # with Terraform
 
-![AWS](../../../../images/aws-terraform.png)
+![AWS](../../../images/aws-terraform.png)
 
 ## Install
 
