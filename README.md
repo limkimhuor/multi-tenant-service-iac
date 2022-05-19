@@ -43,7 +43,22 @@
 
 ## How to do
 
-1. (Optional) Install dependencies
+1. Clone this repo, keep only Cloud Provider folder that project using and follow the instructions
+
+- [AWS](/examples/aws/README.md)
+
+**Note**: Remove the remaining Cloud provider folders
+
+2. Choose IaC tools you need to use and follow the instructions
+
+<pre>
+├── aws
+│   └── <a href="https://github.com/framgia/sun-infra-iac/blob/master/examples/aws/terraform/environments/README.md">terraform</a>
+</pre>
+
+**Note**: Remove the remaining IaC tool folders
+
+3. Install dependencies
 
 <details><summary><b>Ubuntu 18.04</b></summary><br>
 
@@ -71,34 +86,23 @@ curl -L "$(curl -s https://api.github.com/repos/terraform-linters/tflint/release
 
 </details>
 
-2. (Optional) Setup pre-commit
+4. Setup pre-commit
 
 ```bash
 make pre-commit
 ```
 
-3. Choose Cloud Provider you're using for project and follow the instructions
-
-- [AWS](https://github.com/framgia/sun-infra-iac/blob/master/examples/aws/README.md)
-
-4. Choose IaC tools you need to use, clone IaC folder to repo of your project and follow the instructions
-
-<pre>
-├── aws
-│   └── <a href="https://github.com/framgia/sun-infra-iac/blob/master/examples/aws/terraform/environments/README.md">terraform</a>
-</pre>
-
 ## Contributor
 
 - Do step 1 & 2 in **How to do**
 
-If you want to add, update any **IaC tools** to this repo please:
+- Before **_add/change/deprecate/remove/fix_** to this branch, please check out new branch like this `feature/iac-<cloud-provider>-<iac-tools>`, example `feature/iac-aws-terraform` and create PR(if you don't have permission to create branch in this repo, please fork this repo)
 
-- Before **_add/change/deprecate/remove/fix_** to this branch, please check out new feature like this `feature/iac-<cloud-provider>-<iac-tools>`, example `feature/iac-aws-terraform` and create PR
+If you want to add new **terraform modules** to this repo please:
 
-If you want to add, update any **terraform modules** to this repo please:
-
-- Create new feature like this `terraform-aws-<terraform-module>`
+- Create new branch like `feature/terraform-aws-<terraform-module>`(if you don't have permission to create branch in this repo, please fork this repo)
+- PR to `terraform-aws-<terraform-module>` branch
+- After merged, reviewers need to assign tag and release it
 
 ## Release
 

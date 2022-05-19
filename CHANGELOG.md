@@ -9,6 +9,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Nothing yet!
 
+## 2022-05-19
+
+### Updated
+
+- Update examples with new template and using output data from service to another service
+- README
+- Makefile for terraform destroy
+
 ## 2022-03-28
 
 ### Added

@@ -14,6 +14,16 @@ symlink:
 		fi \
 	done
 
+.PHONY: symlink_all
+symlink_all:
+	@read -p "enter Environment: " ENV && \
+	service_path=$$(ls -d terraform/environments/$$ENV/*/) && \
+	for service in $$service_path; do \
+		echo "symlink variables.tf for $$service" && \
+		ln -sfn $(shell pwd)/terraform/environments/$$ENV/variables.tf $(shell pwd)/$$service && \
+		find $$service -type l >> .gitignore; \
+	done
+
 #Init
 .PHONY: init
 init:
