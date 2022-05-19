@@ -14,19 +14,21 @@ All AWS resources of Admin service of project
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.8.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.14.0 |
+| <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_iam_role_lambda_example_admin"></a> [iam\_role\_lambda\_example\_admin](#module\_iam\_role\_lambda\_example\_admin) | git@github.com:framgia/sun-infra-iac.git//modules/iam-role | terraform-aws-iam_v0.0.3 |
+| <a name="module_iam_role_lambda_example_admin"></a> [iam\_role\_lambda\_example\_admin](#module\_iam\_role\_lambda\_example\_admin) | git@github.com:framgia/sun-infra-iac.git//modules/iam-role | terraform-aws-iam_v0.0.4 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [terraform_remote_state.general](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
 ## Inputs
 

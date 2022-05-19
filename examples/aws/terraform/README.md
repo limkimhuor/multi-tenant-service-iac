@@ -10,9 +10,42 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
 
 ### Initialization
 
-#### [Terraform init](https://www.terraform.io/cli/commands/init)
+#### I. Create environments & services
 
-1. Init specific service
+- Create environment folders and services folders in environment. Examples:
+  - [ ] DEV
+  - [x] STG
+    - [**General**](../terraform/environments/stg/1.general/README.md)
+    - [**Admin**](../terraform/environments/stg/2.admin/README.md)
+  - [x] PROD
+    - [**General**](../terraform/environments/prod/1.general/README.md)
+    - [**Admin**](../terraform/environments/prod/2.admin/README.md)
+
+- Symlink variables.tf file of environment to each service folder of it and add this symlink file to gitignore with two method
+
+  *1. Symlink specific service*
+
+  - Excute `make symlink`
+
+  - Enter your environment and service you created. Example:
+
+    ```bash
+    enter Environment & Service: prod admin
+    ```
+
+  *2. Symlink all services*
+
+  - Excute `make symlink_all`
+
+  - Enter your environment want to init. Example:
+
+    ```bash
+    enter Environment: prod
+    ```
+
+#### [II. Terraform init](https://www.terraform.io/cli/commands/init)
+
+*1. Init specific service*
 
 - Excute `make init`
 
@@ -22,7 +55,7 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
   enter Environment & Service: prod admin
   ```
 
-2. Init all services
+*2. Init all services*
 
 - Excute `make init_all`
 
@@ -34,9 +67,9 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
 
 ### Deployment
 
-#### [Terraform plan](https://www.terraform.io/cli/commands/plan)
+#### [I. Terraform plan](https://www.terraform.io/cli/commands/plan)
 
-1. Plan specific service
+*1. Plan specific service*
 
 - Excute `make plan`(If you want to plan before destroy, excute `make plan_destroy` instead)
 
@@ -46,7 +79,7 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
   enter Environment & Service: prod admin
   ```
 
-2. Plan all services
+*2. Plan all services*
 
 - Excute `make plan_all`(If you want to plan before destroy, excute `make plan_destroy_all` instead)
 
@@ -56,9 +89,9 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
   enter Environment: prod
   ```
 
-#### [Terraform apply](https://www.terraform.io/cli/commands/apply)
+#### [II. Terraform apply](https://www.terraform.io/cli/commands/apply)
 
-1. Apply specific service
+*1. Apply specific service*
 
 - Excute `make apply`
 
@@ -68,7 +101,7 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
   enter Environment & Service: prod admin
   ```
 
-2. Apply all services
+*2. Apply all services*
 
 - Excute `make apply_all`
 
@@ -78,9 +111,9 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
   enter Environment: prod
   ```
 
-#### [Terraform destroy](https://www.terraform.io/cli/commands/apply)
+#### [III. Terraform destroy](https://www.terraform.io/cli/commands/apply)
 
-1. Destroy specific service
+*1. Destroy specific service*
 
 - Excute `make destroy`
 
@@ -90,7 +123,7 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
   enter Environment & Service: prod admin
   ```
 
-2. Destroy all services
+*2. Destroy all services*
 
 - Excute `make destroy_all`
 
@@ -100,51 +133,44 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
   enter Environment: prod
   ```
 
-### Create a new service
+## Structure
 
-- Create service folder in environment you want. Ex: **admin**, **general**...
-- Excute `make symlink` to symlink variables.tf file from environment folder to each service folder and add this symlink file to gitignore
-
-- Enter your environment and service you want. Example:
-
-  ```bash
-  enter Environment & Service: prod admin
-  ```
-
-## Examples
-
-### Structure
+### Example
 
 ```
 ├── environments
 │   ├── prod
 │   │   ├── 1.general
-│   │   │   ├── 1.1.iam.tf
+│   │   │   ├── 1.1.vpc.tf
+│   │   │   ├── 1.2.iam.tf
 │   │   │   ├── backend.tf
 │   │   │   ├── outputs.tf
 │   │   │   ├── README.md
-│   │   │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/prod/variables.tf
+│   │   │   └── variables.tf -> /home/bui.ky.quan.sang/sun-infra-iac/examples/aws/terraform/environments/prod/variables.tf
 │   │   ├── 2.admin
 │   │   │   ├── 2.1.iam.tf
 │   │   │   ├── backend.tf
 │   │   │   ├── outputs.tf
 │   │   │   ├── README.md
-│   │   │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/prod/variables.tf
+│   │   │   └── variables.tf -> /home/bui.ky.quan.sang/sun-infra-iac/examples/aws/terraform/environments/prod/variables.tf
+│   │   ├── README.md
 │   │   ├── terraform.prod.tfvars
 │   │   └── variables.tf
 │   └── stg
 │       ├── 1.general
-│       │   ├── 1.1.iam.tf
+│       │   ├── 1.1.vpc.tf
+│       │   ├── 1.2.iam.tf
 │       │   ├── backend.tf
 │       │   ├── outputs.tf
 │       │   ├── README.md
-│       │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/stg/variables.tf
+│       │   └── variables.tf -> /home/bui.ky.quan.sang/sun-infra-iac/examples/aws/terraform/environments/stg/variables.tf
 │       ├── 2.admin
 │       │   ├── 2.1.iam.tf
 │       │   ├── backend.tf
 │       │   ├── outputs.tf
 │       │   ├── README.md
-│       │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/stg/variables.tf
+│       │   └── variables.tf -> /home/bui.ky.quan.sang/sun-infra-iac/examples/aws/terraform/environments/stg/variables.tf
+│       ├── README.md
 │       ├── terraform.stg.tfvars
 │       └── variables.tf
 ├── README.md
@@ -158,26 +184,14 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
     │       ├── 2.build-and-deploy.sh
     │       ├── 3.start.sh
     │       └── 4.validate.sh
-    ├── lambda-function
-    │   └── cloudwatch-alarm
     └── policy
         ├── assume-role-lambda.json
-        └── lambda-example.json
+        └── lambda-example-admin.json
 ```
-
-### Environments
-
-- [ ] DEV
-- [x] STG
-- [**Admin**](https://github.com/framgia/sun-infra-iac/blob/master/examples/aws/terraform/environments/stg/admin/README.md)
-- [**General**](https://github.com/framgia/sun-infra-iac/blob/master/examples/aws/terraform/environments/stg/general/README.md)
-- [x] PROD
-- [**Admin**](https://github.com/framgia/sun-infra-iac/blob/master/examples/aws/terraform/environments/prod/admin/README.md)
-- [**General**](https://github.com/framgia/sun-infra-iac/blob/master/examples/aws/terraform/environments/prod/general/README.md)
 
 ### Vars
 
-- Create variables for main.tf
+- Create variables for main
   - [x] variables.tf
 - Values of variables for each environment
   - [x] terraform.stg.tfvars
@@ -195,7 +209,7 @@ Example:
 
 ```bash
 module "example" {
-  source = "git@github.com:framgia/sun-infra-iac.git//modules/iam-role?ref=terraform-aws-iam_v0.0.3"
+  source = "git@github.com:framgia/sun-infra-iac.git//modules/iam-role?ref=terraform-aws-iam_v0.0.4"
 }
 ```
 

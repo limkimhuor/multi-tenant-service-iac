@@ -15,13 +15,14 @@ All general AWS resources of project
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.8.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.14.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_iam_role_lambda_example"></a> [iam\_role\_lambda\_example](#module\_iam\_role\_lambda\_example) | git@github.com:framgia/sun-infra-iac.git//modules/iam-role | terraform-aws-iam_v0.0.3 |
+| <a name="module_iam_role_lambda_example"></a> [iam\_role\_lambda\_example](#module\_iam\_role\_lambda\_example) | git@github.com:framgia/sun-infra-iac.git//modules/iam-role | terraform-aws-iam_v0.0.4 |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | git@github.com:framgia/sun-infra-iac.git//modules/vpc | terraform-aws-vpc_v0.0.1 |
 
 ## Resources
 
@@ -43,4 +44,5 @@ All general AWS resources of project
 |------|-------------|
 | <a name="output_aws_account_id"></a> [aws\_account\_id](#output\_aws\_account\_id) | Show information about project, environment and account |
 | <a name="output_iam_role_lambda_example_arn"></a> [iam\_role\_lambda\_example\_arn](#output\_iam\_role\_lambda\_example\_arn) | ARN of IAM Role Lambda Example |
+| <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | ID of VPC |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
