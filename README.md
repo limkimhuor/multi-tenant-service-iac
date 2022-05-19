@@ -53,7 +53,7 @@
 
 <pre>
 ├── aws
-│   └── <a href="https://github.com/framgia/sun-infra-iac/blob/master/examples/aws/terraform/environments/README.md">terraform</a>
+│   └── <a href="https://github.com/framgia/sun-infra-iac/blob/master/examples/aws/terraform/README.md">terraform</a>
 </pre>
 
 **Note**: Remove the remaining IaC tool folders

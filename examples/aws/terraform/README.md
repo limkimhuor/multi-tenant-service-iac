@@ -146,13 +146,13 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
 │   │   │   ├── backend.tf
 │   │   │   ├── outputs.tf
 │   │   │   ├── README.md
-│   │   │   └── variables.tf -> /home/bui.ky.quan.sang/sun-infra-iac/examples/aws/terraform/environments/prod/variables.tf
+│   │   │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/prod/variables.tf
 │   │   ├── 2.admin
 │   │   │   ├── 2.1.iam.tf
 │   │   │   ├── backend.tf
 │   │   │   ├── outputs.tf
 │   │   │   ├── README.md
-│   │   │   └── variables.tf -> /home/bui.ky.quan.sang/sun-infra-iac/examples/aws/terraform/environments/prod/variables.tf
+│   │   │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/prod/variables.tf
 │   │   ├── README.md
 │   │   ├── terraform.prod.tfvars
 │   │   └── variables.tf
@@ -163,13 +163,13 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
 │       │   ├── backend.tf
 │       │   ├── outputs.tf
 │       │   ├── README.md
-│       │   └── variables.tf -> /home/bui.ky.quan.sang/sun-infra-iac/examples/aws/terraform/environments/stg/variables.tf
+│       │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/stg/variables.tf
 │       ├── 2.admin
 │       │   ├── 2.1.iam.tf
 │       │   ├── backend.tf
 │       │   ├── outputs.tf
 │       │   ├── README.md
-│       │   └── variables.tf -> /home/bui.ky.quan.sang/sun-infra-iac/examples/aws/terraform/environments/stg/variables.tf
+│       │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/stg/variables.tf
 │       ├── README.md
 │       ├── terraform.stg.tfvars
 │       └── variables.tf
