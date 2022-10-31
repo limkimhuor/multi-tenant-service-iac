@@ -86,6 +86,15 @@ curl -L "$(curl -s https://api.github.com/repos/terraform-linters/tflint/release
 
 </details>
 
+<details><summary><b>MacOS</b></summary><br>
+
+```bash
+brew install terraform-docs
+brew install tflint
+```
+
+</details>
+
 4. Setup pre-commit
 
 ```bash

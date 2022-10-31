@@ -1,3 +1,7 @@
 *.vault*
 *.*htpasswd*
 *.*env*
+terraform/envs/prod/1.general/_variables.tf
+terraform/envs/prod/2.admin/_variables.tf
+terraform/envs/stg/1.general/_variables.tf
+terraform/envs/stg/2.admin/_variables.tf
