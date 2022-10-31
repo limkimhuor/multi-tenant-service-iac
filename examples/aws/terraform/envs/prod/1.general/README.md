@@ -15,7 +15,7 @@ All general AWS resources of project
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.14.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.36.1 |
 
 ## Modules
 

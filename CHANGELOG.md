@@ -9,6 +9,14 @@ Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Nothing yet!
 
+## 2022-10-31
+
+### Updated
+
+- Update .gitignore
+- Update format file name
+- Update README
+
 ## 2022-05-19
 
 ### Updated
