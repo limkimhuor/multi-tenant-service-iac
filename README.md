@@ -105,12 +105,19 @@ make pre-commit
 
 - Do step 1 & 2 in **How to do**
 
-- Before **_add/change/deprecate/remove/fix_** to this branch, please check out new branch like this `feature/iac-<cloud-provider>-<iac-tools>`, example `feature/iac-aws-terraform` and create PR(if you don't have permission to create branch in this repo, please fork this repo)
+- Before **_add/change/deprecate/remove/fix_** to this branch, please check out new branch like this `feature/<iac-tools>-<cloud-provider>`, example `feature/terraform-aws` and create PR to `master` branch (if you don't have permission to create branch in this repo, please fork this repo) with commit format: _[terraform-aws] Describe your feature/function_
 
-If you want to add new **terraform modules** to this repo please:
+### If you want to create new **terraform modules** to this repo please
 
-- Create new branch like `feature/terraform-aws-<terraform-module>`(if you don't have permission to create branch in this repo, please fork this repo)
-- PR to `terraform-aws-<terraform-module>` branch
+- Create new branch like `terraform-aws-<terraform-module>` (if you don't have permission to create branch in this repo, please fork this repo) at `terraform-aws-base` branch. Example:
+
+        ```
+        git branch -m terraform-aws-vpc
+        git push origin terraform-aws-vpc
+        ```
+
+- Checkout new branch `feature/terraform-aws-<terraform-module>` from `terraform-aws-<terraform-module>` and write some code with commit format: _[terraform-aws-"terraform-module"] Describe your feature/function_
+- PR to `terraform-aws-<terraform-module>` branch.
 - After merged, reviewers need to assign tag and release it
 
 ## Release
