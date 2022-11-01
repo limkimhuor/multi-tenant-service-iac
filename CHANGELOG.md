@@ -9,6 +9,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Nothing yet!
 
+## 2022-11-01
+
+### Updated
+
+- Update terraform version
+- Update contributor in README
+
 ## 2022-10-31
 
 ### Updated
