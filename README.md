@@ -120,6 +120,10 @@ make pre-commit
 - PR to `terraform-aws-<terraform-module>` branch.
 - After merged, reviewers need to assign tag and release it
 
+### Diagram GitFlow
+
+![Diagram](/images/gitflow-infra-team-v0.0.1.png)
+
 ## Release
 
 - **Version**: 1.0 :+1:
