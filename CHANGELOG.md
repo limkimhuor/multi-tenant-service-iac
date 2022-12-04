@@ -9,6 +9,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Nothing yet!
 
+## 2022-12-05
+
+### Updated
+
+- Update terraform structure of aws
+- Update README about terraform, how to do, contributor
+
 ## 2022-11-04
 
 ### Added

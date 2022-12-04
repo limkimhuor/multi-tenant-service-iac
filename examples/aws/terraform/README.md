@@ -138,43 +138,40 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
 ### Example
 
 ```
-├── environments
-│   ├── prod
-│   │   ├── 1.general
-│   │   │   ├── 1.1.vpc.tf
-│   │   │   ├── 1.2.iam.tf
-│   │   │   ├── backend.tf
-│   │   │   ├── outputs.tf
+├── terraform
+│   ├── envs
+│   │   ├── prod
+│   │   │   ├── 1.general
+│   │   │   │   ├── _backend.tf
+│   │   │   │   ├── iam.tf
+│   │   │   │   ├── _outputs.tf
+│   │   │   │   ├── README.md
+│   │   │   │   └── vpc.tf
+│   │   │   ├── 2.admin
+│   │   │   │   ├── _backend.tf
+│   │   │   │   ├── iam.tf
+│   │   │   │   ├── _outputs.tf
+│   │   │   │   └── README.md
 │   │   │   ├── README.md
-│   │   │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/prod/variables.tf
-│   │   ├── 2.admin
-│   │   │   ├── 2.1.iam.tf
-│   │   │   ├── backend.tf
-│   │   │   ├── outputs.tf
-│   │   │   ├── README.md
-│   │   │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/prod/variables.tf
-│   │   ├── README.md
-│   │   ├── terraform.prod.tfvars
-│   │   └── variables.tf
-│   └── stg
-│       ├── 1.general
-│       │   ├── 1.1.vpc.tf
-│       │   ├── 1.2.iam.tf
-│       │   ├── backend.tf
-│       │   ├── outputs.tf
-│       │   ├── README.md
-│       │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/stg/variables.tf
-│       ├── 2.admin
-│       │   ├── 2.1.iam.tf
-│       │   ├── backend.tf
-│       │   ├── outputs.tf
-│       │   ├── README.md
-│       │   └── variables.tf -> ~/sun-infra-iac/examples/aws/terraform/environments/stg/variables.tf
-│       ├── README.md
-│       ├── terraform.stg.tfvars
-│       └── variables.tf
-├── README.md
-└── templates
+│   │   │   ├── terraform.prod.tfvars
+│   │   │   └── _variables.tf
+│   │   └── stg
+│   │       ├── 1.general
+│   │       │   ├── _backend.tf
+│   │       │   ├── iam.tf
+│   │       │   ├── _outputs.tf
+│   │       │   ├── README.md
+│   │       │   └── vpc.tf
+│   │       ├── 2.admin
+│   │       │   ├── _backend.tf
+│   │       │   ├── iam.tf
+│   │       │   ├── _outputs.tf
+│   │       │   └── README.md
+│   │       ├── README.md
+│   │       ├── terraform.stg.tfvars
+│   │       └── _variables.tf
+│   └── README.md
+└── terraform-dependencies
     ├── codebuild
     │   └── buildspec.yml
     ├── codedeploy
@@ -184,9 +181,7 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
     │       ├── 2.build-and-deploy.sh
     │       ├── 3.start.sh
     │       └── 4.validate.sh
-    └── policy
-        ├── assume-role-lambda.json
-        └── lambda-example-admin.json
+    └── lambda-function
 ```
 
 ### Vars

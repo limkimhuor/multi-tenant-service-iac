@@ -24,6 +24,7 @@
 - [x] Ubuntu
 - [ ] CentOS
 - [ ] Windows
+- [x] MacOS
 
 ### Basic Configuration
 
@@ -43,89 +44,161 @@
 
 ## How to do
 
-1. Clone this repo, keep only Cloud Provider folder that project using and follow the instructions
+### Install
 
-- [AWS](/examples/aws/README.md)
-
-**Note**: Remove the remaining Cloud provider folders
-
-2. Choose IaC tools you need to use and follow the instructions
-
-<pre>
-├── aws
-│   └── <a href="https://github.com/framgia/sun-infra-iac/blob/master/examples/aws/terraform/README.md">terraform</a>
-</pre>
-
-**Note**: Remove the remaining IaC tool folders
-
-3. Install dependencies
-
-<details><summary><b>Ubuntu 18.04</b></summary><br>
+<details><summary>Ubuntu 20.04</summary><br>
 
 ```bash
+sudo add-apt-repository ppa:xapienz/curl34
 sudo apt update
-sudo apt install -y unzip software-properties-common
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt install -y python3.7 python3-pip
-python3 -m pip install --upgrade pip
-curl -L "$(curl -s https://api.github.com/repos/terraform-docs/terraform-docs/releases/latest | grep -o -E -m 1 "https://.+?-linux-amd64.tar.gz")" > terraform-docs.tgz && tar -xzf terraform-docs.tgz && rm terraform-docs.tgz && chmod +x terraform-docs && sudo mv terraform-docs /usr/bin/
-curl -L "$(curl -s https://api.github.com/repos/terraform-linters/tflint/releases/latest | grep -o -E -m 1 "https://.+?_linux_amd64.zip")" > tflint.zip && unzip tflint.zip && rm tflint.zip && sudo mv tflint /usr/bin/
-```
-
-</details>
-
-<details><summary><b>Ubuntu 20.04</b></summary><br>
-
-```bash
-sudo apt update
+sudo apt install -y libcurl4=7.68.0-1ubuntu2.5ppa1
 sudo apt install -y unzip software-properties-common python3 python3-pip
 python3 -m pip install --upgrade pip
 curl -L "$(curl -s https://api.github.com/repos/terraform-docs/terraform-docs/releases/latest | grep -o -E -m 1 "https://.+?-linux-amd64.tar.gz")" > terraform-docs.tgz && tar -xzf terraform-docs.tgz terraform-docs && rm terraform-docs.tgz && chmod +x terraform-docs && sudo mv terraform-docs /usr/bin/
 curl -L "$(curl -s https://api.github.com/repos/terraform-linters/tflint/releases/latest | grep -o -E -m 1 "https://.+?_linux_amd64.zip")" > tflint.zip && unzip tflint.zip && rm tflint.zip && sudo mv tflint /usr/bin/
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+nvm install node && nvm use node
+npm install --save-dev @commitlint/{cli,config-conventional}
+echo "module.exports = { extends: ['@commitlint/config-conventional'] };" > commitlint.config.js
+rm -rf /usr/local/go && tar -C /usr/local -xzf go1.19.3.linux-amd64.tar.gz && export PATH=$PATH:/usr/local/go/bin
+go install github.com/git-chglog/git-chglog/cmd/git-chglog@0.9.1 && sudo cp ~/go/bin/git-chglog /usr/local/bin/
 ```
 
 </details>
 
-<details><summary><b>MacOS</b></summary><br>
+<details><summary>MacOS</summary><br>
 
 ```bash
 brew install terraform-docs
 brew install tflint
+brew install go
+brew install nvm
+echo "source $(brew --prefix nvm)/nvm.sh" >> ~/.zshrc
+nvm install node && nvm use node
+npm install --save-dev @commitlint/{cli,config-conventional}
+echo "module.exports = { extends: ['@commitlint/config-conventional'] };" > commitlint.config.js
+go install github.com/git-chglog/git-chglog/cmd/git-chglog@0.9.1 && sudo cp ~/go/bin/git-chglog /usr/local/bin/
 ```
 
 </details>
 
-4. Setup pre-commit
+### Setup
 
-```bash
-make pre-commit
-```
+- pre-commit
+
+  ```bash
+  make pre-commit
+  ```
+
+### Pick IaC for project
+
+- Clone this branch, keep only Cloud Provider folder that project using and follow the instructions
+
+  - [AWS](/examples/aws/README.md)
+
+  **Note**: Remove the remaining Cloud provider folders if your project don't use.
+
+- Choose IaC tools you need to use and follow the instructions
+
+  <pre>
+  ├── aws
+  │   └── <a href="https://github.com/framgia/sun-infra-iac/blob/master/examples/aws/terraform/README.md">terraform</a>
+  </pre>
+
+  **Note**: Remove the remaining IaC tool folders if your project don't use.
 
 ## Contributor
 
-- Do step 1 & 2 in **How to do**
+### Do "Install" step in [How to do](#how-to-do)
 
-- Before **_add/change/deprecate/remove/fix_** to this branch, please check out new branch like this `feature/<iac-tools>-<cloud-provider>`, example `feature/terraform-aws` and create PR to `master` branch (if you don't have permission to create branch in this repo, please fork this repo) with commit format: _[terraform-aws] Describe your feature/function_
+### Do "Setup" step in [How to do](#how-to-do)
 
-### If you want to create new **terraform modules** to this repo please
+### Git flow
 
-- Create new branch like `terraform-aws-<terraform-module>` (if you don't have permission to create branch in this repo, please fork this repo) at `terraform-aws-base` branch. Example:
+- Before **_add/change/deprecate/remove_** to this module, please checkout new branch like this `feature/<iac-tool>-<cloud-provider>` or `feature/<function>`
 
-        ```
-        git branch -m terraform-aws-vpc
-        git push origin terraform-aws-vpc
-        ```
+- Before **_fix_** to this module, please checkout new branch like this `bugfix/<iac-tool>-<cloud-provider>` or `bugfix/<function>`
 
-- Checkout new branch `feature/terraform-aws-<terraform-module>` from `terraform-aws-<terraform-module>` and write some code with commit format: _[terraform-aws-"terraform-module"] Describe your feature/function_
-- PR to `terraform-aws-<terraform-module>` branch.
-- After merged, reviewers need to assign tag and release it
+- PR to `master` branch with [Commit Message Header](#commit-header) format.
+
+- Follow our [Coding Rules](#rules).
+
+#### <a name="commit-header"></a>Commit Message Header
+
+ ```
+ <type>(<scope>): <short summary>
+   │       │             │
+   │       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.
+   │       │
+   │       └─⫸ Commit Scope(Optional): terraform-aws-<terraform-module>-<function(optional)>
+   │
+   └─⫸ Commit Type: build|ci|docs|feat|fix|perf|refactor|test
+ ```
+
+Example:
+
+- feat(terraform-aws-vpc): My description here
+- docs(terraform-aws-vpc): cut the terraform-aws-vpc_vx.y.z release
+
+##### Type
+
+Must be one of the following:
+
+- **build**: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
+- **ci**: Changes to our CI configuration files and scripts (examples: CircleCi, SauceLabs)
+- **docs**: Documentation only changes
+- **feat**: A new feature
+- **fix**: A bug fix
+- **perf**: A code change that improves performance
+- **refactor**: A code change that neither fixes a bug nor adds a feature
+- **test**: Adding missing tests or correcting existing tests
+
+##### Scope (Optional)
+
+The scope should be the name of the module/feature affected:
+
+  ```
+  <iac-tool>-<cloud-provider>-<module-name>-<function-name(optional)>
+  ```
+
+##### Summary
+
+Use the summary field to provide a succinct description of the change:
+
+- use the imperative, present tense: "change" not "changed" nor "changes"
+- don't capitalize the first letter
+- no dot (.) at the end
+
+##### Revert commits
+
+If the commit reverts a previous commit, it should begin with `revert:`, followed by the header of the reverted commit.
+
+The content of the commit message body should contain:
+
+- information about the SHA of the commit being reverted in the following format: `This reverts commit <SHA>`,
+- a clear description of the reason for reverting the commit message.
+
+#### <a name="rules"></a> Coding Rules
+
+To ensure consistency throughout the source code, keep these rules in mind as you are working:
+
+- All features or bug fixes **must be tested** by one or more apply.
+- **must be documented**.
+
+## If you want to create new **terraform modules**
+
+Create new branch like `terraform-aws-<terraform-module>` (if you don't have permission to create branch in this repo, please fork this repo) from `terraform-aws-base` branch. Example:
+
+  ```
+  git checkout terraform-aws-base
+  git checkout -b terraform-aws-vpc
+  git push origin terraform-aws-vpc
+  ```
 
 ### Diagram GitFlow
 
 ![Diagram](/images/gitflow-infra-team-v0.0.1.png)
 
-## Release
+## License
 
-- **Version**: 1.0 :+1:
-- **Date**: 24/12/2021
-- **SupportTeam**: [DevOps] IaC & CI/CD :star:
+Apache 2 Licensed. See [LICENSE](/LICENSE) for full details.
