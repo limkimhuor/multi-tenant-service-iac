@@ -92,10 +92,10 @@ Refer how to install [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/
   ```
 
   ```bash
-  aws s3api create-bucket --bucket {{ project }}-iac-state-{{ env }} --region ap-northeast-1 --create-bucket-configuration LocationConstraint=ap-northeast-1 --profile {{ project }}-{{ env }}
-  aws s3api put-bucket-versioning --bucket {{ project }}-iac-state-{{ env }} --versioning-configuration Status=Enabled --region ap-northeast-1 --profile {{ project }}-{{ env }}
+  aws s3api create-bucket --bucket {{ project }}-{{ env }}-iac-state --region ap-northeast-1 --create-bucket-configuration LocationConstraint=ap-northeast-1 --profile {{ project }}-{{ env }}
+  aws s3api put-bucket-versioning --bucket {{ project }}-{{ env }}-iac-state --versioning-configuration Status=Enabled --region ap-northeast-1 --profile {{ project }}-{{ env }}
   aws s3api put-public-access-block \
-      --bucket {{ project }}-iac-state-{{ env }} \
+      --bucket {{ project }}-{{ env }}-iac-state \
       --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true" \
       --region ap-northeast-1 --profile {{ project }}-{{ env }}
   ```
@@ -104,11 +104,11 @@ Refer how to install [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/
 
   ```bash
   aws dynamodb create-table \
-      --table-name {{ project }}-terraform-state-lock-{{ env }} \
+      --table-name {{ project }}-{{ env }}-terraform-state-lock \
       --attribute-definitions AttributeName=LockID,AttributeType=S \
       --key-schema AttributeName=LockID,KeyType=HASH \
       --billing-mode PAY_PER_REQUEST \
-      --tags Key=Name,Value={{ project }}-terraform-state-lock-{{ env }} Key=Environment,Value={{ env }} \
+      --tags Key=Name,Value={{ project }}-{{ env }}-terraform-state-lock Key=Environment,Value={{ env }} \
       --region ap-northeast-1 \
       --profile {{ project }}-{{ env }}
   ```
@@ -117,9 +117,11 @@ Refer how to install [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/
 
   ```bash
   KMS_KEY_ID=$(aws kms create-key --description "Encrypt tfstate in s3 backend" --query "KeyMetadata.KeyId" --output text --profile {{ project }}-{{ env }} --region ap-northeast-1)
-  aws kms create-alias --alias-name alias/{{ project }}-iac-{{ env }} --target-key-id $KMS_KEY_ID --profile {{ project }}-{{ env }} --region ap-northeast-1
-  KMS_KEY_ARN=$(aws kms describe-key --key-id $KMS_KEY_ID --query "KeyMetadata.Arn" --output text --profile {{ project }}-{{ env }} --region ap-northeast-1) | echo "Terraform KMS Key ARN: \n $KMS_KEY_ARN"
+  aws kms create-alias --alias-name alias/{{ project }}-{{ env }}-iac --target-key-id $KMS_KEY_ID --profile {{ project }}-{{ env }} --region ap-northeast-1
+  KMS_KEY_ARN=$(aws kms describe-key --key-id $KMS_KEY_ID --query "KeyMetadata.Arn" --output text --profile {{ project }}-{{ env }} --region ap-northeast-1) | echo "Terraform KMS Key ARN: \n" $KMS_KEY_ARN
   ```
+
+#### Notes: You can use `pre-build.sh` to automatically execute all commands above instead (skip with region us-east-1)
 
 #### 2.3 (Optional) Create key pairs for project using EC2
 
@@ -127,7 +129,7 @@ Refer how to install [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/
 
   ```bash
   aws ec2 create-key-pair \
-      --key-name {{ project }}-keypair-{{ env }} \
+      --key-name {{ project }}-{{ env }}-keypair \
       --key-type rsa \
       --query "KeyMaterial" \
       --profile {{ project }}-{{ env }} \
