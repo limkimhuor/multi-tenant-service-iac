@@ -26,5 +26,11 @@ terraform {
 provider "aws" {
   region  = var.region
   profile = "${var.project}-${var.env}"
+  default_tags {
+    tags = {
+      Project     = var.project
+      Environment = var.env
+    }
+  }
 }
 data "aws_caller_identity" "current" {}

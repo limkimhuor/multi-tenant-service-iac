@@ -1,119 +1,198 @@
+SHELL:=/bin/bash
 ###################
 # For Terraform
 ###################
-#Symlink: When create new service
-.PHONY: symlink
-symlink:
-	@read -p "enter Environment & Service: " ENV SERVICE && \
-	service_list=$$(ls -d terraform/envs/$$ENV/*/ | cut -d . -f2 | cut -d / -f1) && \
-	for service in $$service_list; do \
-        if [ $$service = $$SERVICE ]; then\
-		service_path=$$(ls -d terraform/envs/$$ENV/*/ | grep $$SERVICE | head -n 1) && echo "symlink variables.tf for $$service_path" && \
-		ln -sfn $(shell pwd)/terraform/envs/$$ENV/_variables.tf $(shell pwd)/$$service_path && \
-		find $$service_path -type l >> .gitignore; \
+#Set ENV & SERVICE
+.PHONY: set_env
+set_env:
+ifndef e
+$(error Error: ENV is undefined, please add to your command `e=dev or e=stg or e=prod or e=...`)
+endif
+
+.PHONY: check_env
+check_env: set_env
+ifeq ($(filter %$(e)/,$(shell ls -d terraform/envs/*/)),)
+$(error Error: ENV defined is "$(e)" but not exists)
+else
+$(info ENV: "$(e)")
+endif
+
+.PHONY: set_service
+set_service:
+ifndef s
+s := SERVICE
+endif
+
+.PHONY: check_service
+check_service: check_env set_service
+		@if [ "$s" = "SERVICE" ]; then \
+			echo 'Error: SERVICE is required but no definition was found, still default value: "$(s)"' && \
+			exit 1; \
+		else \
+			for service in $$(ls -d terraform/envs/$(e)/*/ | cut -d . -f2 | cut -d / -f1); do \
+				if [ "$s" = $$service ]; then \
+					echo 'SERVICE: "$(s)"'; \
+				elif echo $$(ls -d terraform/envs/$(e)/*/ | cut -d . -f2 | cut -d / -f1) | grep -qFw "$s"; then \
+					continue; \
+				else \
+					echo 'Error: SERVICE defined is "$(s)" but not exists' && \
+					exit 1; \
+				fi \
+			done \
 		fi \
-	done
+	
+.PHONY: set_target
+set_service:
+ifndef t
+t := module.TARGET
+endif
+
+.PHONY: check_target
+check_target: check_env check_service set_target
+		@if [ "$t" = "module.TARGET" ]; then \
+			echo 'Error: TARGET is required but no definition was found, still default value: "$(t)"' && \
+			exit 1; \
+		else \
+			echo 'TARGET: "$(t)"'; \
+		fi \
+
+
+#Symlink: When creating new service
+.PHONY: symlink
+symlink: check_env check_service
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && VAR="_variables.tf" && \
+	if grep -rw ".gitignore" -e "$$service_path$$VAR"; then \
+		echo "This variables.tf already symlinked"; \
+	else \
+		ln -sfn $(shell pwd)/terraform/envs/$(e)/_variables.tf $(shell pwd)/$$service_path && \
+		find $$service_path -type l >> .gitignore && \
+		echo Symlink variables.tf for: \"$$service_path\"; \
+	fi \
 
 .PHONY: symlink_all
-symlink_all:
-	@read -p "enter Environment: " ENV && \
-	service_path=$$(ls -d terraform/envs/$$ENV/*/) && \
+symlink_all: check_env
+	@service_path=$$(ls -d terraform/envs/$(e)/*/) && VAR="_variables.tf" && \
 	for service in $$service_path; do \
-		echo "symlink variables.tf for $$service" && \
-		ln -sfn $(shell pwd)/terraform/envs/$$ENV/_variables.tf $(shell pwd)/$$service && \
-		find $$service -type l >> .gitignore; \
-	done
-
-#Init
-.PHONY: init
-init:
-	@read -p "enter Environment & Service: " ENV SERVICE && \
-	service_list=$$(ls -d terraform/envs/$$ENV/*/ | cut -d . -f2 | cut -d / -f1) && \
-	for service in $$service_list; do \
-        if [ $$service = $$SERVICE ]; then\
-		service_path=$$(ls -d terraform/envs/$$ENV/*/ | grep $$SERVICE | head -n 1) && echo $$service_path && terraform -chdir=$$service_path init; \
+		if grep -rw ".gitignore" -e "$$service$$VAR"; then \
+			echo "This variables.tf already symlinked"; \
+		else \
+			ln -sfn $(shell pwd)/terraform/envs/$(e)/_variables.tf $(shell pwd)/$$service && \
+			find $$service -type l >> .gitignore && \
+			echo Symlink variables.tf for: \"$$service\"; \
 		fi \
 	done
+#Unsymlink: When deleting service
+.PHONY: unsymlink
+unsymlink: check_env check_service
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && VAR="_variables.tf" && \
+	if grep -rw ".gitignore" -e "$$service_path$$VAR"; then \
+		sed -i $$(grep -rnw ".gitignore" -e "$$service_path$$VAR"  | cut -c -1)d .gitignore && \
+		rm -rf $$service_path$$VAR && \
+		echo Unsymlink variables.tf for: \"$$service_path\"; \
+	else \
+		echo "This variables.tf already unsymlinked"; \
+	fi \
+
+.PHONY: unsymlink_all
+unsymlink_all: check_env
+	@service_path=$$(ls -d terraform/envs/$(e)/*/) && VAR="_variables.tf" && \
+	for service in $$service_path; do \
+		if grep -rw ".gitignore" -e "$$service$$VAR"; then \
+			sed -i $$(grep -rnw ".gitignore" -e "$$service$$VAR"  | cut -c -1)d .gitignore && \
+			rm -rf $$service$$VAR && \
+			echo Unsymlink variables.tf for: \"$$service\"; \
+		else \
+			echo "This variables.tf already unsymlinked"; \
+		fi \
+	done
+
+
+#Init commands
+.PHONY: init
+init: check_env check_service
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting init: \"$$service_path\" && \
+	terraform -chdir=$$service_path init
 
 .PHONY: init_all
-init_all:
-	@read -p "enter Environment: " ENV && \
-	service_path=$$(ls -d terraform/envs/$$ENV/*/) && \
+init_all: check_env
+	@service_path=$$(ls -d terraform/envs/$(e)/*/) && \
 	for service in $$service_path; do \
-		echo $$service && terraform -chdir=$$service init; \
+		echo Excuting init: \"$$service\" && \
+		terraform -chdir=$$service init; \
 	done
 
-#Plan resources
+
+#Plan/Apply commands
 .PHONY: plan
-plan:
-	@read -p "enter Environment & Service: " ENV SERVICE && \
-	service_list=$$(ls -d terraform/envs/$$ENV/*/ | cut -d . -f2 | cut -d / -f1) && \
-	for service in $$service_list; do \
-        if [ $$service = $$SERVICE ]; then\
-		service_path=$$(ls -d terraform/envs/$$ENV/*/ | grep $$SERVICE | head -n 1) && echo $$service_path && terraform -chdir=$$service_path plan --var-file=../terraform.$$ENV.tfvars; \
-		fi \
-	done
+plan: check_env check_service
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting plan: \"$$service_path\" && \
+	terraform -chdir=$$service_path plan --var-file=../terraform.$(e).tfvars
+
+.PHONY: plan_target
+plan_target: check_env check_service check_target
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting plan: \"$$service_path\" with target: \'$(t)\' && \
+	terraform -chdir=$$service_path plan --var-file=../terraform.$(e).tfvars --target '$(t)'
 
 .PHONY: plan_all
-plan_all:
-	@read -p "enter Environment: " ENV && \
-	service_path=$$(ls -d terraform/envs/$$ENV/*/) && \
+plan_all: check_env
+	@service_path=$$(ls -d terraform/envs/$(e)/*/) && \
 	for service in $$service_path; do \
-		echo $$service && terraform -chdir=$$service plan --var-file=../terraform.$$ENV.tfvars; \
+		echo Excuting plan: \"$$service\" && \
+		terraform -chdir=$$service plan --var-file=../terraform.$(e).tfvars; \
 	done
 
-.PHONY: plan_destroy
-plan_destroy:
-	@read -p "enter Environment & Service: " ENV SERVICE && \
-	service_list=$$(ls -d terraform/envs/$$ENV/*/ | cut -d . -f2 | cut -d / -f1) && \
-	for service in $$service_list; do \
-        if [ $$service = $$SERVICE ]; then\
-		service_path=$$(ls -d terraform/envs/$$ENV/*/ | grep $$SERVICE | head -n 1) && echo $$service_path && terraform -chdir=$$service_path plan --var-file=../terraform.$$ENV.tfvars -destroy; \
-		fi \
-	done
-
-.PHONY: plan_destroy_all
-plan_destroy_all:
-	@read -p "enter Environment: " ENV && \
-	service_path=$$(ls -d terraform/envs/$$ENV/*/) && \
-	for service in $$service_path; do \
-		echo $$service && terraform -chdir=$$service plan --var-file=../terraform.$$ENV.tfvars -destroy; \
-	done
-
-#Apply resources
 .PHONY: apply
-apply:
-	@read -p "enter Environment & Service: " ENV SERVICE && \
-	service_list=$$(ls -d terraform/envs/$$ENV/*/ | cut -d . -f2 | cut -d / -f1) && \
-	for service in $$service_list; do \
-        if [ $$service = $$SERVICE ]; then\
-		service_path=$$(ls -d terraform/envs/$$ENV/*/ | grep $$SERVICE | head -n 1) && echo $$service_path && terraform -chdir=$$service_path apply --var-file=../terraform.$$ENV.tfvars; \
-		fi \
-	done
+apply: check_env check_service
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting apply: \"$$service_path\" && \
+	terraform -chdir=$$service_path apply --var-file=../terraform.$(e).tfvars
+
+.PHONY: apply_target
+apply_target: check_env check_service check_target
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting apply: \"$$service_path\" with target: \'$(t)\' && \
+	terraform -chdir=$$service_path apply --var-file=../terraform.$(e).tfvars --target '$(t)'
 
 .PHONY: apply_all
-apply_all:
-	@read -p "enter Environment: " ENV && \
-	service_path=$$(ls -d terraform/envs/$$ENV/*/) && \
+apply_all: check_env
+	@service_path=$$(ls -d terraform/envs/$(e)/*/) && \
 	for service in $$service_path; do \
-		echo $$service && terraform -chdir=$$service apply --var-file=../terraform.$$ENV.tfvars; \
+		echo Excuting apply: \"$$service\" && \
+		terraform -chdir=$$service apply --var-file=../terraform.$(e).tfvars; \
 	done
 
-#Destroy resources
-.PHONY: destroy
-destroy:
-	@read -p "enter Environment & Service: " ENV SERVICE && \
-	service_list=$$(ls -d terraform/envs/$$ENV/*/ | cut -d . -f2 | cut -d / -f1) && \
-	for service in $$service_list; do \
-        if [ $$service = $$SERVICE ]; then\
-		service_path=$$(ls -d terraform/envs/$$ENV/*/ | grep $$SERVICE | head -n 1) && echo $$service_path && terraform -chdir=$$service_path destroy --var-file=../terraform.$$ENV.tfvars; \
-		fi \
+
+#Plan/Destroy commands
+.PHONY: plan_destroy
+plan_destroy: check_env check_service
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting plan destroy: \"$$service_path\" && \
+	terraform -chdir=$$service_path plan --var-file=../terraform.$(e).tfvars -destroy
+
+.PHONY: plan_destroy_target
+plan_destroy_target: check_env check_service check_target
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting plan destroy: \"$$service_path\" with target: \'$(t)\' && \
+	terraform -chdir=$$service_path plan --var-file=../terraform.$(e).tfvars --target '$(t)' -destroy
+
+.PHONY: plan_destroy_all
+plan_destroy_all: check_env
+	@service_path=$$(ls -d terraform/envs/$(e)/*/) && \
+	for service in $$service_path; do \
+		echo Excuting plan destroy: \"$$service\" && \
+		terraform -chdir=$$service plan --var-file=../terraform.$(e).tfvars -destroy; \
 	done
+
+.PHONY: destroy
+destroy: check_env check_service
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting destroy: \"$$service_path\" && \
+	terraform -chdir=$$service_path destroy --var-file=../terraform.$(e).tfvars
+
+.PHONY: destroy_target
+destroy_target: check_env check_service check_target
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting destroy: \"$$service_path\" with target: \'$(t)\' && \
+	terraform -chdir=$$service_path destroy --var-file=../terraform.$(e).tfvars --target '$(t)'
 
 .PHONY: destroy_all
-destroy_all:
-	@read -p "enter Environment: " ENV && \
-	service_path=$$(ls -d terraform/envs/$$ENV/*/) && \
+destroy_all: check_env
+	@service_path=$$(ls -d terraform/envs/$(e)/*/) && \
 	for service in $$service_path; do \
-		echo $$service && terraform -chdir=$$service destroy --var-file=../terraform.$$ENV.tfvars; \
+		echo Excuting destroy: \"$$service\" && \
+		terraform -chdir=$$service destroy --var-file=../terraform.$(e).tfvars; \
 	done

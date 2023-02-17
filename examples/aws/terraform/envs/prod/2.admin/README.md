@@ -14,7 +14,7 @@ All AWS resources of Admin service of project
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.36.1 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.55.0 |
 | <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
 
 ## Modules

@@ -185,16 +185,6 @@ To ensure consistency throughout the source code, keep these rules in mind as yo
 - All features or bug fixes **must be tested** by one or more apply.
 - **must be documented**.
 
-## If you want to create new **terraform modules**
-
-Create new branch like `terraform-aws-<terraform-module>` (if you don't have permission to create branch in this repo, please fork this repo) from `terraform-aws-base` branch. Example:
-
-  ```
-  git checkout terraform-aws-base
-  git checkout -b terraform-aws-vpc
-  git push origin terraform-aws-vpc
-  ```
-
 ### Diagram GitFlow
 
 ![Diagram](/images/gitflow-infra-team-v0.0.1.png)
