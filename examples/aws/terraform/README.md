@@ -194,7 +194,7 @@ Example:
 
 ```bash
 module "example" {
-  source = "git@github.com:framgia/sun-infra-iac.git//modules/iam-role?ref=terraform-aws-iam_v0.0.4"
+  source = "git@github.com:framgia/sun-infra-iac.git//modules/iam-role?ref=terraform-aws-iam_v0.1.2"
 }
 ```
 

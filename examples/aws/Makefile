@@ -173,7 +173,7 @@ plan_destroy_target: check_env check_service check_target
 
 .PHONY: plan_destroy_all
 plan_destroy_all: check_env
-	@service_path=$$(ls -d terraform/envs/$(e)/*/) && \
+	@service_path=$$(ls -dr terraform/envs/$(e)/*/) && \
 	for service in $$service_path; do \
 		echo Excuting plan destroy: \"$$service\" && \
 		terraform -chdir=$$service plan --var-file=../terraform.$(e).tfvars -destroy; \
@@ -191,7 +191,7 @@ destroy_target: check_env check_service check_target
 
 .PHONY: destroy_all
 destroy_all: check_env
-	@service_path=$$(ls -d terraform/envs/$(e)/*/) && \
+	@service_path=$$(ls -dr terraform/envs/$(e)/*/) && \
 	for service in $$service_path; do \
 		echo Excuting destroy: \"$$service\" && \
 		terraform -chdir=$$service destroy --var-file=../terraform.$(e).tfvars; \
