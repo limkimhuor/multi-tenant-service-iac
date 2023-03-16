@@ -42,7 +42,7 @@ check_service: check_env set_service
 		fi \
 	
 .PHONY: set_target
-set_service:
+set_target:
 ifndef t
 t := module.TARGET
 endif
@@ -54,6 +54,21 @@ check_target: check_env check_service set_target
 			exit 1; \
 		else \
 			echo 'TARGET: "$(t)"'; \
+		fi \
+
+.PHONY: set_other_target
+set_other_target:
+ifndef ot
+ot := OTHER_TARGET
+endif
+
+.PHONY: check_other_target
+check_other_target: check_env check_service check_target set_other_target
+		@if [ "$(ot)" = "OTHER_TARGET" ]; then \
+			echo 'Error: OTHER TARGET is required but no definition was found, still default value: "$(ot)"' && \
+			exit 1; \
+		else \
+			echo 'OTHER TARGET: "$(ot)"'; \
 		fi \
 
 
@@ -112,6 +127,16 @@ unsymlink_all: check_env
 init: check_env check_service
 	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting init: \"$$service_path\" && \
 	terraform -chdir=$$service_path init
+
+.PHONY: init_upgrade
+init_upgrade: check_env check_service
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting init upgrade: \"$$service_path\" && \
+	terraform -chdir=$$service_path init --upgrade
+
+.PHONY: init_migrate
+init_migrate: check_env check_service
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting init migrate-state: \"$$service_path\" && \
+	terraform -chdir=$$service_path init -migrate-state
 
 .PHONY: init_all
 init_all: check_env
@@ -196,3 +221,42 @@ destroy_all: check_env
 		echo Excuting destroy: \"$$service\" && \
 		terraform -chdir=$$service destroy --var-file=../terraform.$(e).tfvars; \
 	done
+
+
+#Other commands
+##Recreate resource
+.PHONY: taint
+taint: check_env check_service check_target
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting taint resource: \"$$service_path\" with target: \'$(t)\' && \
+	terraform -chdir=$$service_path taint '$(t)'
+
+.PHONY: untaint
+untaint: check_env check_service check_target
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting untaint resource: \"$$service_path\" with target: \'$(t)\' && \
+	terraform -chdir=$$service_path untaint '$(t)'
+
+##State of resource
+.PHONY: state_list
+state_list: check_env check_service
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting state list resource: \"$$service_path\" && \
+	terraform -chdir=$$service_path state list
+
+.PHONY: state_show
+state_show: check_env check_service check_target
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting state show resource: \"$$service_path\" with target: \'$(t)\' && \
+	terraform -chdir=$$service_path state show '$(t)'
+
+.PHONY: state_import
+state_import: check_env check_service check_target check_other_target
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting state import resource: \"$$service_path\" from target: \'$(t)\' to: $(ot) && \
+	terraform -chdir=$$service_path import --var-file=../terraform.$(e).tfvars '$(t)' '$(ot)'
+
+.PHONY: state_rm
+state_rm: check_env check_service check_target
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting state delete resource: \"$$service_path\" with target: \'$(t)\' && \
+	terraform -chdir=$$service_path state rm '$(t)'
+
+.PHONY: state_mv
+state_mv: check_env check_service check_target check_other_target
+	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && echo Excuting state move resource: \"$$service_path\" from target: \'$(t)\' to: \'$(ot)\' && \
+	terraform -chdir=$$service_path state mv '$(t)' '$(ot)'

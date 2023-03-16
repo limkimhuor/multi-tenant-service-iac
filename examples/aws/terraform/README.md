@@ -61,7 +61,23 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
     make init e=dev s=general
     ```
 
-*2. Init all services*
+*2. Init upgrade for service*
+
+- Excute `make init_upgrade e=<environment-name> s=<service-name>`. Example:
+
+    ```bash
+    make init_upgrade e=dev s=general
+    ```
+
+*3. Init migrate state for service*
+
+- Excute `make init_migrate e=<environment-name> s=<service-name>`. Example:
+
+    ```bash
+    make init_migrate e=dev s=general
+    ```
+
+*4. Init all services*
 
 - Excute `make init_all e=<environment-name>`. Example:
 
@@ -83,7 +99,7 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
 
 *2. Plan specific service with module target*
 
-- Excute `make plan_target e=<environment-name> s=<service-name> t=<module-name>` (If you want to plan before destroy target, excute `make plan_destroy_target e=<environment-name> s=<service-name> t=<module-name>` instead). Example:
+- Excute `make plan_target e=<environment-name> s=<service-name> t='<module-name>'` (If you want to plan before destroy target, excute `make plan_destroy_target e=<environment-name> s=<service-name> t='<module-name>'` instead). Example:
 
     ```bash
     make plan_target e=dev s=general t=module.vpc
@@ -109,7 +125,7 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
 
 *2. Apply specific service with module target*
 
-- Excute `make apply_target e=<environment-name> s=<service-name> t=<module-name>`. Example:
+- Excute `make apply_target e=<environment-name> s=<service-name> t='<module-name>'`. Example:
 
     ```bash
     make apply_target e=dev s=general t=module.vpc
@@ -135,7 +151,7 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
 
 *2. Destroy specific service with module target*
 
-- Excute `make destroy_target e=<environment-name> s=<service-name> t=<module-name>`. Example:
+- Excute `make destroy_target e=<environment-name> s=<service-name> t='<module-name>'`. Example:
 
     ```bash
     make destroy_target e=dev s=general t=module.vpc
@@ -147,6 +163,64 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
 
     ```bash
     make destroy_all e=dev
+    ```
+
+#### IV. Other Terraform commands
+
+*1. Recreate a resource in service*
+
+- Excute `make taint e=<environment-name> s=<service-name> t='<module-name>'`. Example:
+
+    ```bash
+    make taint e=dev s=general t='module.rds_aurora.aws_rds_cluster.aurora_cluster'
+    ```
+
+*2. **Do not** recreate a resource in service*
+
+- Excute `make untaint e=<environment-name> s=<service-name> t='<module-name>'`. Example:
+
+    ```bash
+    make untaint e=dev s=general t='module.rds_aurora.aws_rds_cluster.aurora_cluster'
+    ```
+
+*3. List all state of service*
+
+- Excute `make state_list e=<environment-name> s=<service-name>`. Example:
+
+    ```bash
+    make state_list e=dev s=general
+    ```
+
+*4. Show state of resource in service*
+
+- Excute `make state_show e=<environment-name> s=<service-name> t='<module-name>'`. Example:
+
+    ```bash
+    make state_show e=dev s=general t='module.rds_aurora.aws_rds_cluster.aurora_cluster'
+    ```
+
+*5. Import state of resource into service*
+
+- Excute `make state_import e=<environment-name> s=<service-name> t='<module-name>' ot='<other-module-name>'`. Example:
+
+    ```bash
+    make state_import e=dev s=general t='module.rds_aurora.aws_cloudwatch_log_group.aurora_log_group["error"]' ot=/aws/rds/cluster/sgaas-gami-dev-rds-aurora-cluster/error
+    ```
+
+*6. Remove state of resource out of service*
+
+- Excute `make state_rm e=<environment-name> s=<service-name> t='<module-name>'`. Example:
+
+    ```bash
+    make state_rm e=dev s=general t='module.rds_aurora.aws_rds_cluster.aurora_cluster'
+    ```
+
+*7. Move state of resource to another state in service*
+
+- Excute `make state_mv e=<environment-name> s=<service-name> t='<module-name>' ot='<other-module-name>'`. Example:
+
+    ```bash
+    make state_mv e=dev s=general t='module.rds_aurora.aws_cloudwatch_log_group.aurora_log_group["error"]' ot='module.rds_aurora.aws_cloudwatch_log_group.aurora_log_group["new-error"]'
     ```
 
 ## Structure
@@ -192,10 +266,10 @@ Refer how to install [terraform](https://learn.hashicorp.com/tutorials/terraform
 
 Example:
 
-```bash
-module "example" {
-  source = "git@github.com:framgia/sun-infra-iac.git//modules/iam-role?ref=terraform-aws-iam_v0.1.2"
-}
+```terraform
+  module "example" {
+    source = "git@github.com:framgia/sun-infra-iac.git//modules/iam-role?ref=terraform-aws-iam_v0.1.2"
+  }
 ```
 
 ### Backend

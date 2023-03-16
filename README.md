@@ -60,6 +60,7 @@ wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
 nvm install node && nvm use node
 npm install --save-dev @commitlint/{cli,config-conventional}
 echo "module.exports = { extends: ['@commitlint/config-conventional'] };" > commitlint.config.js
+wget https://golang.org/dl/go1.19.3.linux-amd64.tar.gz
 rm -rf /usr/local/go && tar -C /usr/local -xzf go1.19.3.linux-amd64.tar.gz && export PATH=$PATH:/usr/local/go/bin
 go install github.com/git-chglog/git-chglog/cmd/git-chglog@0.9.1 && sudo cp ~/go/bin/git-chglog /usr/local/bin/
 ```

@@ -6,8 +6,8 @@ All AWS resources of Admin service of project
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.37 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.9 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_template"></a> [template](#requirement\_template) | ~> 2.0 |
 
 ## Providers
@@ -33,7 +33,11 @@ All AWS resources of Admin service of project
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_env"></a> [env](#input\_env) | Name of project environment | `string` | n/a | yes |
+| <a name="input_project"></a> [project](#input\_project) | Name of project | `string` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | Region of environment | `string` | n/a | yes |
 
 ## Outputs
 
