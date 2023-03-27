@@ -118,7 +118,7 @@ Refer how to install [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/
   ```bash
   KMS_KEY_ID=$(aws kms create-key --description "Encrypt tfstate in s3 backend" --query "KeyMetadata.KeyId" --output text --profile {{ project }}-{{ env }} --region ap-northeast-1)
   aws kms create-alias --alias-name alias/{{ project }}-{{ env }}-iac --target-key-id $KMS_KEY_ID --profile {{ project }}-{{ env }} --region ap-northeast-1
-  KMS_KEY_ARN=$(aws kms describe-key --key-id $KMS_KEY_ID --query "KeyMetadata.Arn" --output text --profile {{ project }}-{{ env }} --region ap-northeast-1) | echo "Terraform KMS Key ARN: \n" $KMS_KEY_ARN
+  KMS_KEY_ARN=$(aws kms describe-key --key-id $KMS_KEY_ID --query "KeyMetadata.Arn" --output text --profile {{ project }}-{{ env }} --region ap-northeast-1) && echo "Terraform KMS Key ARN: \n" $KMS_KEY_ARN
   ```
 
 #### Notes: You can use `pre-build.sh` to automatically execute all commands above instead (skip with region us-east-1)
