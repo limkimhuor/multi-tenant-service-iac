@@ -40,7 +40,7 @@ check_service: check_env set_service
 				fi \
 			done \
 		fi \
-	
+
 .PHONY: set_target
 set_target:
 ifndef t
@@ -76,26 +76,41 @@ check_other_target: check_env check_service check_target set_other_target
 .PHONY: symlink
 symlink: check_env check_service
 	@service_path=$$(ls -d terraform/envs/$(e)/*/ | grep $(s) | head -n 1) && VAR="_variables.tf" && \
-	if grep -rw ".gitignore" -e "$$service_path$$VAR"; then \
-		echo "This variables.tf already symlinked"; \
+	target_link=$(shell pwd)/terraform/envs/$(e)/_variables.tf && \
+	symlink_path=$$service_path$$VAR && \
+	if [ -L "$$symlink_path" ]; then \
+		echo "Symlink already exists for: \"$$service_path\""; \
 	else \
-		ln -sfn $(shell pwd)/terraform/envs/$(e)/_variables.tf $(shell pwd)/$$service_path && \
-		find $$service_path -type l >> .gitignore && \
-		echo Symlink variables.tf for: \"$$service_path\"; \
-	fi \
+		ln -sfn "$$target_link" "$$symlink_path" && \
+		if ! grep -qx "$$symlink_path" .gitignore; then \
+			echo "$$symlink_path" >> .gitignore && \
+			echo "Added symlink to .gitignore: $$symlink_path"; \
+		else \
+			echo "Symlink path already in .gitignore"; \
+		fi && \
+		echo "Created symlink for: $$service_path"; \
+	fi
 
 .PHONY: symlink_all
 symlink_all: check_env
 	@service_path=$$(ls -d terraform/envs/$(e)/*/) && VAR="_variables.tf" && \
 	for service in $$service_path; do \
-		if grep -rw ".gitignore" -e "$$service$$VAR"; then \
-			echo "This variables.tf already symlinked"; \
+		target_link=$(shell pwd)/terraform/envs/$(e)/_variables.tf && \
+		symlink_path=$$service$$VAR && \
+		if [ -L "$$symlink_path" ]; then \
+			echo "Symlink already exists for: \"$$service\""; \
 		else \
-			ln -sfn $(shell pwd)/terraform/envs/$(e)/_variables.tf $(shell pwd)/$$service && \
-			find $$service -type l >> .gitignore && \
-			echo Symlink variables.tf for: \"$$service\"; \
-		fi \
+			ln -sfn "$$target_link" "$$symlink_path" && \
+			if ! grep -qx "$$symlink_path" .gitignore; then \
+				echo "$$symlink_path" >> .gitignore && \
+				echo "Added symlink to .gitignore: $$symlink_path"; \
+			else \
+				echo "Symlink path already in .gitignore"; \
+			fi && \
+			echo "Created symlink for: $$service"; \
+		fi; \
 	done
+
 #Unsymlink: When deleting service
 .PHONY: unsymlink
 unsymlink: check_env check_service
