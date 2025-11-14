@@ -17,7 +17,7 @@ terraform {
     key            = "general/terraform.prod.tfstate"
     region         = "ap-northeast-1"
     encrypt        = true
-    kms_key_id     = "arn:aws:kms:ap-northeast-1:098131748091:key/35acde48-4109-4b33-a975-4f382d05cd65"
+    kms_key_id     = "alias/multi-tenant-service-iac-prod-iac"
     dynamodb_table = "multi-tenant-service-iac-prod-terraform-state-lock"
   }
 }
@@ -30,6 +30,7 @@ provider "aws" {
     tags = {
       Project     = var.project
       Environment = var.env
+      Layer       = "general"
     }
   }
 }
