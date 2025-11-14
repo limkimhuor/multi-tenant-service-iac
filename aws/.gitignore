@@ -1,0 +1,4 @@
+*.vault*
+*.*htpasswd*
+*.*env*
+terraform/envs/prod/1.general/_variables.tf
