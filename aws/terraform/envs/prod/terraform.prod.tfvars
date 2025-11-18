@@ -18,7 +18,7 @@ db_cidrs      = ["10.0.21.0/24", "10.0.22.0/24"]
 # aurora_instances         = 2 # Number of Aurora instances (at least 2 for High Availability)
 
 # Domain Configuration
-domain_name = "huorlk.xyz"
+domain_name = "huorlk.uk"
 
 # ECS Configuration
 ecs_cluster_name  = "multi-tenant-service-iac-prod-ecs-cluster"
@@ -26,3 +26,9 @@ ecs_cpu           = 1024
 ecs_memory        = 2048
 ecs_desired_count = 2
 ecs_max_capacity  = 10
+
+# Application Layer (ECS Service/Task/Application specific)
+app_desired_count  = 2
+app_cpu            = 512
+app_memory         = 1024
+app_container_port = 3000

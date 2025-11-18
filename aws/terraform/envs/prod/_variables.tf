@@ -82,3 +82,17 @@ variable "ecs_max_capacity" {
   description = "Maximum number of ECS service tasks for auto-scaling"
   type        = number
 }
+
+# Application Layer variables
+variable "app_desired_count" {
+  type = number
+}
+variable "app_cpu" {
+  type = number
+}
+variable "app_memory" {
+  type = number
+}
+variable "app_container_port" {
+  type = number
+}

@@ -11,6 +11,16 @@ data "terraform_remote_state" "general" {
   }
 }
 
+data "terraform_remote_state" "compute" {
+  backend = "s3"
+  config = {
+    profile = "${var.project}-${var.env}"
+    bucket  = "${var.project}-${var.env}-iac-state"
+    key     = "compute/terraform.${var.env}.tfstate"
+    region  = var.region
+  }
+}
+
 data "terraform_remote_state" "database" {
   backend = "s3"
   config = {
@@ -24,7 +34,6 @@ data "terraform_remote_state" "database" {
 # Get AWS Load Balancer service account for access logs
 data "aws_elb_service_account" "main" {}
 
-# Fetch current AWS account identity
 locals {
   aws_account_id = data.aws_caller_identity.current.account_id
   aws_region     = data.aws_region.current.id
