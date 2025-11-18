@@ -54,3 +54,31 @@ variable "db_cidrs" {
 #   description = "Number of instances in the Aurora cluster"
 #   type = number
 # }
+
+# Domain variable
+variable "domain_name" {
+  description = "Domain name"
+  type        = string
+}
+
+# ECS variables
+variable "ecs_cluster_name" {
+  description = "Name of the ECS cluster"
+  type        = string
+}
+variable "ecs_cpu" {
+  description = "CPU units for the ECS task"
+  type        = number
+}
+variable "ecs_memory" {
+  description = "Memory (in MiB) for the ECS task"
+  type        = number
+}
+variable "ecs_desired_count" {
+  description = "Desired number of ECS service tasks"
+  type        = number
+}
+variable "ecs_max_capacity" {
+  description = "Maximum number of ECS service tasks for auto-scaling"
+  type        = number
+}
