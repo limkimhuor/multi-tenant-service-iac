@@ -9,3 +9,10 @@ vpc_cidr = "10.0.0.0/16"
 public_cidrs  = ["10.0.1.0/24", "10.0.2.0/24"]
 private_cidrs = ["10.0.11.0/24", "10.0.12.0/24"]
 db_cidrs      = ["10.0.21.0/24", "10.0.22.0/24"]
+
+# Aurora PostgreSQL settings - Not support free-tier
+# aurora_instance_class    = "db.serverless"
+# aurora_min_capacity      = 0.5
+# aurora_max_capacity      = 1
+# aurora_backup_retention  = 7 # Backup retention period in days
+# aurora_instances         = 2 # Number of Aurora instances (at least 2 for High Availability)

@@ -32,3 +32,25 @@ variable "db_cidrs" {
   description = "CIDR blocks for database subnets"
   type        = list(string)
 }
+
+# # Aurora variables
+# variable "aurora_instance_class" {
+#   description = "Instance class for Aurora instances"
+#   type = string
+# }
+# variable "aurora_min_capacity" {
+#   description = "Minimum capacity for Aurora cluster"
+#   type = number
+# }
+# variable "aurora_max_capacity" {
+#   description = "Maximum capacity for Aurora cluster"
+#   type = number
+# }
+# variable "aurora_backup_retention" {
+#   description = "Backup retention period for Aurora cluster (in days)"
+#   type = number
+# }
+# variable "aurora_instances" {
+#   description = "Number of instances in the Aurora cluster"
+#   type = number
+# }
