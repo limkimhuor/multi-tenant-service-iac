@@ -5,3 +5,4 @@ terraform/envs/prod/1.general/_variables.tf
 terraform/envs/prod/2.database/_variables.tf
 terraform/envs/prod/3.compute/_variables.tf
 terraform/envs/prod/4.application/_variables.tf
+terraform/envs/prod/5.monitoring/_variables.tf

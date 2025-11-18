@@ -32,3 +32,7 @@ app_desired_count  = 2
 app_cpu            = 512
 app_memory         = 1024
 app_container_port = 3000
+
+# Monitoring Configuration
+cw_log_retention_in_days = 30
+alarm_email              = "kimhuorlim@gmail.com"

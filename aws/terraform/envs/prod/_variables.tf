@@ -96,3 +96,13 @@ variable "app_memory" {
 variable "app_container_port" {
   type = number
 }
+
+# Monitoring variables
+variable "cw_log_retention_in_days" {
+  type    = number
+  default = 30
+}
+variable "alarm_email" {
+  type    = string
+  default = "kimhuorlim@gmail.com"
+}
